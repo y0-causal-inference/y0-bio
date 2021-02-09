@@ -4,6 +4,7 @@
 
 from typing import Optional
 
+import pybel
 import pybel.constants as pc
 from ananke.graphs import ADMG
 from pybel import BELGraph
@@ -15,6 +16,7 @@ __all__ = [
     'bel_to_nxmg',
     'bel_to_admg',
     'bel_to_causaleffect',
+    'emmaa_to_nxmg',
 ]
 
 CORRELATIVE_RELATIONS = pc.CORRELATIVE_RELATIONS | {pc.CORRELATION}
@@ -23,6 +25,7 @@ VALID = {'di', 'bi', 'skip'}
 
 def bel_to_nxmg(
     bel_graph: BELGraph,
+    *,
     include_associations: bool = False,
     indirect_handler: Optional[str] = None,
 ) -> NxMixedGraph:
@@ -72,6 +75,7 @@ def bel_to_nxmg(
 
 def bel_to_admg(
     graph: BELGraph,
+    *,
     include_associations: bool = False,
     indirect_handler: Optional[str] = None,
 ) -> ADMG:
@@ -94,6 +98,7 @@ def bel_to_admg(
 
 def bel_to_causaleffect(
     graph: BELGraph,
+    *,
     include_associations: bool = False,
     indirect_handler: Optional[str] = None,
 ) -> ADMG:
@@ -112,3 +117,27 @@ def bel_to_causaleffect(
         indirect_handler=indirect_handler,
     )
     return nxmg.to_causaleffect()
+
+
+def emmaa_to_nxmg(model: str, date: Optional[str] = None, **kwargs) -> NxMixedGraph:
+    """Get content from EMMAA and convert to a NXMG.
+
+    :param model: The name of the EMMAA model
+    :param date: The optional date of the EMMAA model. See :func:`pybel.from_emmaa`.
+    :param kwargs: Keyword arguments to pass to :func:`bel_to_nxmg`
+    :return: A y0 networkx mixed graph
+
+    The following example uses the `RAS model <https://www.ndexbio.org/#/network/cc9f904f-4ffd-11e9-9f06-0ac135e8bacf>`_
+    on EMMAA.
+
+    >>> from y0.dsl import P, Variable
+    >>> from y0.identify import is_identifiable
+    >>> from y0_bio.io.bel import emmaa_to_nxmg
+    >>> KRAS = Variable('KRAS')
+    >>> MAPK1 = Variable('MAPK1')
+    >>> ras = emmaa_to_nxmg('rasmodel')
+    >>> is_identifiable(ras, P(MAPK1 @ KRAS))
+    True
+    """
+    bel_graph = pybel.from_emmaa(model, date=date)
+    return bel_to_nxmg(bel_graph, **kwargs)

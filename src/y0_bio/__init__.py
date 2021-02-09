@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-"""Biological applications of y0"""
+"""Biological applications of y0."""

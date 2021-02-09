@@ -15,12 +15,13 @@ TEST_EVIDENCE = 'ev'
 A = Protein(namespace='hgnc', name='A')
 B = Protein(namespace='hgnc', name='B')
 C = Protein(namespace='hgnc', name='C')
+D = Protein(namespace='hgnc', name='D')
 
 
 class TestBELImport(unittest.TestCase):
     """Test importing BEL."""
 
-    def admg_equal(self, expected, actual, msg=None):
+    def nxmg_equal(self, expected, actual, msg=None):
         """Check that two ADMGs are equivalent."""
         self.assertIsInstance(expected, NxMixedGraph)
         self.assertIsInstance(actual, NxMixedGraph)
@@ -32,11 +33,28 @@ class TestBELImport(unittest.TestCase):
         bel_graph = BELGraph()
         bel_graph.add_directly_increases(A, B, citation=TEST_CITATION, evidence=TEST_EVIDENCE)
         bel_graph.add_directly_decreases(B, C, citation=TEST_CITATION, evidence=TEST_EVIDENCE)
-        actual = bel_to_nxmg(bel_graph)
+        bel_graph.add_negative_correlation(A, C, citation=TEST_CITATION, evidence=TEST_EVIDENCE)
+        bel_graph.add_association(A, D, citation=TEST_CITATION, evidence=TEST_EVIDENCE)
+
         expected = NxMixedGraph.from_edges(
             directed=[
                 ('A', 'B'),
                 ('B', 'C'),
             ],
+            undirected=[
+                ('A', 'C'),
+            ]
         )
-        self.admg_equal(expected, actual)
+        self.nxmg_equal(expected, bel_to_nxmg(bel_graph, include_associations=False))
+
+        expected = NxMixedGraph.from_edges(
+            directed=[
+                ('A', 'B'),
+                ('B', 'C'),
+            ],
+            undirected=[
+                ('A', 'C'),
+                ('A', 'D'),
+            ]
+        )
+        self.nxmg_equal(expected, bel_to_nxmg(bel_graph, include_associations=True))

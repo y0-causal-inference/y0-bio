@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-"""Import BEL to Ananke."""
+"""Convert BEL to y0 mixed graphs."""
 
 from typing import Optional
 
 import pybel.constants as pc
 from ananke.graphs import ADMG
 from pybel import BELGraph
+from pybel.dsl import Protein
 
 from y0.graph import NxMixedGraph
 
@@ -21,7 +22,7 @@ VALID = {'di', 'bi', 'skip'}
 
 
 def bel_to_nxmg(
-    graph: BELGraph,
+    bel_graph: BELGraph,
     include_associations: bool = False,
     indirect_handler: Optional[str] = None,
 ) -> NxMixedGraph:
@@ -34,8 +35,9 @@ def bel_to_nxmg(
       be some confounders in the middle
     - Positive correlation, negative correlation, and correlation become bidirected edges
     - Association edges are excluded by default, could be optionally included
+    - Only include protein-protein relationships identified by HGNC
 
-    :param graph: A BEL graph
+    :param bel_graph: A BEL graph
     :param include_associations: Should :data:`pybel.constants.ASSOCIATION` relationships be included as bidirected
         edges in the graph? Defaults to false.
     :param indirect_handler: How should indirected edges be handled? If 'bi', adds as bidirected edges. Elif 'di',
@@ -47,7 +49,11 @@ def bel_to_nxmg(
         indirect_handler = 'bi'
     if indirect_handler not in VALID:
         raise ValueError(f'invalid indirect edge handler: {indirect_handler}. Should be in {VALID}')
-    for u, v, d in graph.edges(data=True):
+    for u, v, d in bel_graph.edges(data=True):
+        if not isinstance(u, Protein) or not isinstance(v, Protein):
+            continue
+        if u.namespace.lower() != 'hgnc' or v.namespace.lower() != 'hgnc':
+            continue
         if d[pc.RELATION] in CORRELATIVE_RELATIONS:
             rv.add_undirected_edge(u.name, v.name)
         elif include_associations and d[pc.RELATION] == pc.ASSOCIATION:

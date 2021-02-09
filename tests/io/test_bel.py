@@ -43,7 +43,7 @@ class TestBELImport(unittest.TestCase):
             ],
             undirected=[
                 ('A', 'C'),
-            ]
+            ],
         )
         self.nxmg_equal(expected, bel_to_nxmg(bel_graph, include_associations=False))
 
@@ -55,6 +55,6 @@ class TestBELImport(unittest.TestCase):
             undirected=[
                 ('A', 'C'),
                 ('A', 'D'),
-            ]
+            ],
         )
         self.nxmg_equal(expected, bel_to_nxmg(bel_graph, include_associations=True))

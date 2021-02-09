@@ -43,6 +43,8 @@ def bel_to_nxmg(
     :param indirect_handler: How should indirected edges be handled? If 'bi', adds as bidirected edges. Elif 'di',
         adds as bidirected edges. If 'skip', do not include. If None, defaults to 'bi'.
     :return: A y0 networkx mixed graph
+
+    :raises ValueError: for invalid input on "indirect_handler"
     """
     rv = NxMixedGraph()
     if indirect_handler is None:

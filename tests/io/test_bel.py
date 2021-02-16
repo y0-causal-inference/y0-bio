@@ -4,11 +4,15 @@
 
 import unittest
 
+import pybel
 from pybel import BELGraph
 from pybel.dsl import Protein
 
+from y0.dsl import P, Variable
 from y0.graph import NxMixedGraph
+from y0.identify import is_identifiable
 from y0_bio.io.bel import bel_to_nxmg
+from y0_bio.resources import BEL_EXAMPLE
 
 TEST_CITATION = '1234'
 TEST_EVIDENCE = 'ev'
@@ -58,3 +62,12 @@ class TestBELImport(unittest.TestCase):
             ],
         )
         self.nxmg_equal(expected, bel_to_nxmg(bel_graph, include_associations=True))
+
+    def test_identifiable(self):
+        """Test a BEL example for identifiability."""
+        bel_graph = pybel.load(BEL_EXAMPLE)
+        nxmg = bel_to_nxmg(bel_graph)
+        self.assertTrue(is_identifiable(
+            nxmg,
+            P(Variable('Severe Acute Respiratory Syndrome') @ Variable('angiotensin II')),
+        ))

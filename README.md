@@ -9,8 +9,8 @@
 </h1>
 
 <p align="center">
-    <a href="https://github.com/y0-causal-reasoning/y0-bio/actions?query=workflow%3ATests">
-        <img alt="Tests" src="https://github.com/y0-causal-reasoning/y0-bio/workflows/Tests/badge.svg" />
+    <a href="https://github.com/y0-causal-inference/y0-bio/actions?query=workflow%3ATests">
+        <img alt="Tests" src="https://github.com/y0-causal-inference/y0-bio/workflows/Tests/badge.svg" />
     </a>
     <a href="https://github.com/cthoyt/cookiecutter-python-package">
         <img alt="Cookiecutter template from @cthoyt" src="https://img.shields.io/badge/Cookiecutter-python--package-yellow" /> 
@@ -21,7 +21,7 @@
     <a href="https://pypi.org/project/y0_bio">
         <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/y0_bio" />
     </a>
-    <a href="https://github.com/y0-causal-reasoning/y0-bio/blob/main/LICENSE">
+    <a href="https://github.com/y0-causal-inference/y0-bio/blob/main/LICENSE">
         <img alt="PyPI - License" src="https://img.shields.io/pypi/l/y0_bio" />
     </a>
     <a href='https://y0_bio.readthedocs.io/en/latest/?badge=latest'>
@@ -48,13 +48,13 @@ $ pip install y0_bio
 The most recent code and data can be installed directly from GitHub with:
 
 ```bash
-$ pip install git+https://github.com/y0-causal-reasoning/y0-bio.git
+$ pip install git+https://github.com/y0-causal-inference/y0-bio.git
 ```
 
 To install in development mode, use the following:
 
 ```bash
-$ git clone git+https://github.com/y0-causal-reasoning/y0-bio.git
+$ git clone git+https://github.com/y0-causal-inference/y0-bio.git
 $ cd y0-bio
 $ pip install -e .
 ```
@@ -65,7 +65,7 @@ The code in this package is licensed under the MIT License.
 
 ## 🙏 Contributing
 Contributions, whether filing an issue, making a pull request, or forking, are appreciated. See
-[CONTRIBUTING.rst](https://github.com/y0-causal-reasoning/y0-bio/blob/master/CONTRIBUTING.rst) for more information on getting
+[CONTRIBUTING.rst](https://github.com/y0-causal-inference/y0-bio/blob/master/CONTRIBUTING.rst) for more information on getting
 involved.
 
 ## 🍪 Cookiecutter Acknowledgement
@@ -87,7 +87,7 @@ run reproducibly with:
 $ tox
 ```
 
-Additionally, these tests are automatically re-run with each commit in a [GitHub Action](https://github.com/y0-causal-reasoning/y0-bio/actions?query=workflow%3ATests).
+Additionally, these tests are automatically re-run with each commit in a [GitHub Action](https://github.com/y0-causal-inference/y0-bio/actions?query=workflow%3ATests).
 
 ### 📦 Making a Release
 

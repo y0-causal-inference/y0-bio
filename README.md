@@ -33,8 +33,22 @@ Biological applications for [y0](https://github.com/y0-causal-inference/y0).
 
 ## 💪 Getting Started
 
-> TODO show in a very small amount of space the **MOST** useful thing your package can do.
-Make it as short as possible! You have an entire set of docs for later.
+
+Check that your BEL graph is identifiable under a causal query:
+
+```python
+import pybel
+from y0.dsl import P, Variable
+from y0.identify import is_identifiable
+from y0_bio.resources import BEL_EXAMPLE
+from y0_bio.io.bel import bel_to_nxmg
+bel_graph = pybel.load(BEL_EXAMPLE)
+nxmg = bel_to_nxmg(bel_graph)
+assert is_identifiable(
+    nxmg,
+    P(Variable('Severe Acute Respiratory Syndrome') @ Variable('angiotensin II')),
+)
+```
 
 ## ⬇️ Installation
 

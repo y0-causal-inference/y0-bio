@@ -8,7 +8,6 @@ import pybel
 import pybel.constants as pc
 from ananke.graphs import ADMG
 from pybel import BELGraph
-from pybel.dsl import Protein
 
 from y0.graph import NxMixedGraph
 
@@ -55,21 +54,27 @@ def bel_to_nxmg(
     if indirect_handler not in VALID:
         raise ValueError(f'invalid indirect edge handler: {indirect_handler}. Should be in {VALID}')
     for u, v, d in bel_graph.edges(data=True):
-        if not isinstance(u, Protein) or not isinstance(v, Protein):
-            continue
-        if u.namespace.lower() != 'hgnc' or v.namespace.lower() != 'hgnc':
+        try:
+            u_name = u.name
+        except AttributeError:
+            u_name = str(u)
+        try:
+            v_name = v.name
+        except AttributeError:
+            v_name = str(v)
+        if u_name == v_name:
             continue
         if d[pc.RELATION] in CORRELATIVE_RELATIONS:
-            rv.add_undirected_edge(u.name, v.name)
+            rv.add_undirected_edge(u_name, v_name)
         elif include_associations and d[pc.RELATION] == pc.ASSOCIATION:
-            rv.add_undirected_edge(u.name, v.name)
+            rv.add_undirected_edge(u_name, v_name)
         elif d[pc.RELATION] in pc.DIRECT_CAUSAL_RELATIONS:
-            rv.add_directed_edge(u.name, v.name)
+            rv.add_directed_edge(u_name, v_name)
         elif d[pc.RELATION] in pc.INDIRECT_CAUSAL_RELATIONS:
             if indirect_handler == 'bi':
-                rv.add_undirected_edge(u.name, v.name)
+                rv.add_undirected_edge(u_name, v_name)
             elif indirect_handler == 'di':
-                rv.add_directed_edge(u.name, v.name)
+                rv.add_directed_edge(u_name, v_name)
     return rv
 
 
@@ -87,6 +92,15 @@ def bel_to_admg(
     :param indirect_handler: How should indirected edges be handled? If 'bi', adds as bidirected edges. Elif 'di',
         adds as bidirected edges. If 'skip', do not include. If None, defaults to 'bi'.
     :return: An Ananke ADMG
+
+    >>> import pybel
+    >>> from y0.dsl import P, Variable
+    >>> from y0.identify import is_identifiable
+    >>> from y0_bio.resources import BEL_EXAMPLE
+    >>> from y0_bio.io.bel import bel_to_nxmg
+    >>> bel_graph = pybel.load(BEL_EXAMPLE)
+    >>> nxmg = bel_to_nxmg(bel_graph)
+    >>> is_identifiable(nxmg, P(Variable('Severe Acute Respiratory Syndrome') @ Variable('angiotensin II')))
     """
     nxmg = bel_to_nxmg(
         graph,

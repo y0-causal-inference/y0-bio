@@ -27,6 +27,9 @@
     <a href='https://y0_bio.readthedocs.io/en/latest/?badge=latest'>
         <img src='https://readthedocs.org/projects/y0_bio/badge/?version=latest' alt='Documentation Status' />
     </a>
+   <a href="https://zenodo.org/badge/latestdoi/4543746 ">
+        <img src="https://zenodo.org/badge/4543746 .svg" alt="DOI">
+   </a>
 </p>
 
 Biological applications for [y0](https://github.com/y0-causal-inference/y0).

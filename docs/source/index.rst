@@ -7,6 +7,7 @@ y0-bio |release| Documentation
    :name: start
 
    installation
+   bel
    cli
 
 Indices and Tables

@@ -8,6 +8,7 @@ import pybel
 import pybel.constants as pc
 from ananke.graphs import ADMG
 from pybel import BELGraph
+from pybel.dsl import ComplexAbundance
 
 from y0.graph import NxMixedGraph
 
@@ -54,14 +55,8 @@ def bel_to_nxmg(
     if indirect_handler not in VALID:
         raise ValueError(f'invalid indirect edge handler: {indirect_handler}. Should be in {VALID}')
     for u, v, d in bel_graph.edges(data=True):
-        try:
-            u_name = u.name
-        except AttributeError:
-            u_name = str(u)
-        try:
-            v_name = v.name
-        except AttributeError:
-            v_name = str(v)
+        u_name = _get_name(u)
+        v_name = _get_name(v)
         if u_name == v_name:
             continue
         if d[pc.RELATION] in CORRELATIVE_RELATIONS:
@@ -76,6 +71,15 @@ def bel_to_nxmg(
             elif indirect_handler == 'di':
                 rv.add_directed_edge(u_name, v_name)
     return rv
+
+
+def _get_name(u):
+    if isinstance(u, ComplexAbundance):
+        return '-'.join(map(_get_name, u.members)) + ' complex'
+    try:
+        return u.name
+    except AttributeError:
+        return str(u)
 
 
 def bel_to_admg(
